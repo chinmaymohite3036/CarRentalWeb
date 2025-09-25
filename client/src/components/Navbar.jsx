@@ -4,8 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const navLinks = [
   { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
-  { name: "Contact", path: "/contact" },
+  { name: "Cars", path: "/cars" },
+  { name: "My Bookings", path: "/Mybookings" },
 ];
 
 const Navbar = ({ setShowLogin }) => {
@@ -20,7 +20,7 @@ const Navbar = ({ setShowLogin }) => {
       }`}
     >
       <Link to="/">
-        <img src={assets.logo} alt="logo" className="h-8" />
+        <img src={assets.logo} alt="logo" className="h-10 md:h-13" />
       </Link>
       <div
         className={`max-sm:fixed max-sm:h-screen max-sm:w-full max-sm:top-16 max-sm:border-t border-border-color right-0 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 max-sm:p-4 transition-all duration-300 z-50 ${
@@ -57,8 +57,7 @@ const Navbar = ({ setShowLogin }) => {
 
       <button
         className="sm:hidden cursor-pointer"
-        aria
-        label="Menu"
+        aria-label="Menu"
         onClick={() => setOpen(!open)}
       >
         <img src={open ? assets.close_icon : assets.menu_icon} alt="menu" />

@@ -32,6 +32,7 @@ import calendar_icon_colored from "./calendar_icon_colored.svg";
 import location_icon_colored from "./location_icon_colored.svg";
 import testimonial_image_1 from "./testimonial_image_1.png";
 import testimonial_image_2 from "./testimonial_image_2.png";
+import testimonial_image_3 from "./testimonial_image_3.png";
 import main_car from "./main_car.png";
 import banner_car_image from "./banner_car_image.png";
 import user_profile from "./user_profile.png";
@@ -88,6 +89,7 @@ export const assets = {
   filter_icon,
   testimonial_image_1,
   testimonial_image_2,
+  testimonial_image_3,
   main_car,
   banner_car_image,
   car_image1,
@@ -150,9 +152,9 @@ export const dummyCarData = [
     category: "SUV",
     seating_capacity: 4,
     fuel_type: "Hybrid",
-    transmission: "Semi-Automatic",
-    pricePerDay: 300,
-    location: "New York",
+    transmission: "Automatic",
+    pricePerDay: 20000,
+    location: "Mumbai",
     description:
       "The BMW X5 is a mid-size luxury SUV produced by BMW. The X5 made its debut in 1999 as the first SUV ever produced by BMW.",
     isAvaliable: true,
@@ -161,16 +163,16 @@ export const dummyCarData = [
   {
     _id: "67ff6b758f1b3684286a2a65",
     owner: "67fe3467ed8a8fe17d0ba6e2",
-    brand: "Toyota",
-    model: "Corolla",
+    brand: "Mercedes-Benz",
+    model: "Maybach",
     image: car_image2,
     year: 2021,
     category: "Sedan",
     seating_capacity: 4,
     fuel_type: "Diesel",
     transmission: "Manual",
-    pricePerDay: 130,
-    location: "Chicago",
+    pricePerDay: 10000,
+    location: "Sangamner",
     description:
       "The Toyota Corolla is a mid-size luxury sedan produced by Toyota. The Corolla made its debut in 2008 as the first sedan ever produced by Toyota.",
     isAvaliable: true,
@@ -187,8 +189,8 @@ export const dummyCarData = [
     seating_capacity: 4,
     fuel_type: "Hybrid",
     transmission: "Automatic",
-    pricePerDay: 200,
-    location: "Los Angeles",
+    pricePerDay: 15000,
+    location: "Pune",
     description:
       "The Jeep Wrangler is a mid-size luxury SUV produced by Jeep. The Wrangler made its debut in 2003 as the first SUV ever produced by Jeep.",
     isAvaliable: true,
@@ -197,16 +199,16 @@ export const dummyCarData = [
   {
     _id: "68009c93a3f5fc6338ea7e34",
     owner: "67fe3467ed8a8fe17d0ba6e2",
-    brand: "Ford",
-    model: "Neo 6",
+    brand: "Audi",
+    model: "A4",
     image: car_image4,
     year: 2022,
     category: "Sedan",
-    seating_capacity: 2,
+    seating_capacity: 4 ,
     fuel_type: "Diesel",
-    transmission: "Semi-Automatic",
-    pricePerDay: 209,
-    location: "Houston",
+    transmission: "Automatic",
+    pricePerDay: 20000,
+    location: "Nashik",
     description:
       "This is a mid-size luxury sedan produced by Toyota. The Corolla made its debut in 2008 as the first sedan ever produced by Toyota.",
     isAvaliable: true,
