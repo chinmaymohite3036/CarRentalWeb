@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "Cars", path: "/cars" },
-  { name: "My Bookings", path: "/Mybookings" },
+  { name: "My Bookings", path: "/my-bookings" },
 ];
 
 const Navbar = ({ setShowLogin }) => {
