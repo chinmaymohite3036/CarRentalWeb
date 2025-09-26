@@ -204,7 +204,7 @@ export const dummyCarData = [
     image: car_image4,
     year: 2022,
     category: "Sedan",
-    seating_capacity: 4 ,
+    seating_capacity: 4,
     fuel_type: "Diesel",
     transmission: "Automatic",
     pricePerDay: 20000,

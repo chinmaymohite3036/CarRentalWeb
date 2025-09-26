@@ -64,7 +64,7 @@ const ManageBookings = () => {
                   {booking.status === "pending" ? (
                     <select
                       value={booking.status}
-                      className="px-2 py-1.5 mt-1 text-gray-500 border border-borderColor rounded-md outline-none"
+                      className="px-2 py-1.5 mt-1 text-gray-500 border border-border-color rounded-md outline-none"
                     >
                       <option value="pending">Pending</option>
                       <option value="cancelled">Cancelled</option>
