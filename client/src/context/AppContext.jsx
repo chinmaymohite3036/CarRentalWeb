@@ -1,19 +1,21 @@
-// client/src/context/AppContext.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 
-// Create the context
-export const AppContext = createContext();
+export const AppContext = createContext(null);
 
-// The Provider component
+export const useAppContext = () => {
+    return useContext(AppContext);
+};
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+
 export const AppProvider = ({ children }) => {
     const navigate = useNavigate();
     const currency = import.meta.env.VITE_CURRENCY;
-
     const [token, setToken] = useState(localStorage.getItem('token'));
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(undefined);
     const [isOwner, setIsOwner] = useState(false);
     const [showLogin, setShowLogin] = useState(false);
     const [cars, setCars] = useState([]);
@@ -70,11 +72,11 @@ export const AppProvider = ({ children }) => {
                 setUser(data.user);
                 setIsOwner(data.user.role === 'owner');
             } else {
-                logout();
+                setUser(null); // Explicitly set user to null on failure
             }
         } catch (error) {
             console.error("Failed to fetch user data:", error);
-            logout();
+            setUser(null); // Set user to null on error to stop loading states
         }
     };
 
@@ -108,19 +110,18 @@ export const AppProvider = ({ children }) => {
           const { data } = await axios.get("/api/owner/dashboard");
           if (data.success) {
             setDashboardData(data.dashboardData);
-          } else {
-            toast.error(data.message);
           }
         } catch (error) {
-          toast.error(error.message);
+          toast.error("Failed to fetch dashboard data");
         }
     };
 
     useEffect(() => {
-        axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
         if (token) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             fetchUser();
+        } else {
+            setUser(null); // If no token, we know the user is not logged in
         }
         fetchCars();
     }, [token]);
@@ -128,7 +129,7 @@ export const AppProvider = ({ children }) => {
     const value = {
         navigate, currency, axios, user, setUser, token, setToken, isOwner, setIsOwner,
         showLogin, setShowLogin, logout, cars, setCars, fetchCars, registerUser, loginUser, changeRole,
-        dashboardData, fetchDashboardData, pickupDate, setPickupDate, returnDate, setReturnDate,
+        dashboardData, fetchDashboardData, pickupDate, setPickupDate, returnDate, setReturnDate
     };
 
     return (
@@ -136,9 +137,4 @@ export const AppProvider = ({ children }) => {
             {children}
         </AppContext.Provider>
     );
-};
-
-// Custom hook to use the context
-export const useAppContext = () => {
-    return useContext(AppContext);
 };

@@ -1,16 +1,17 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { AppProvider } from "./context/AppContext.jsx";
+import { Toaster } from "react-hot-toast";
 import { MotionConfig } from "motion/react";
 
 createRoot(document.getElementById("root")).render(
-  <HashRouter>
+  <BrowserRouter>
     <AppProvider>
       <MotionConfig viewport={{ once: true }}>
         <App />
       </MotionConfig>
     </AppProvider>
-  </HashRouter>
+  </BrowserRouter>
 );

@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Outfit", "sans-serif"], // <-- Add this section
+        sans: ['Outfit', 'sans-serif'],
       },
       colors: {
         primary: "#2563eb",
