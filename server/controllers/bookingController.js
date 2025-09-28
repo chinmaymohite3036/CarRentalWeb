@@ -1,5 +1,6 @@
 import Booking from "../models/Booking.js";
 import Car from "../models/Car.js";
+import mongoose from "mongoose";
 
 // Function to check availability of car for a given date
 const checkAvailability = async (car, pickupDate, returnDate) => {
@@ -14,10 +15,10 @@ const checkAvailability = async (car, pickupDate, returnDate) => {
 // API to check availability of cars for the given date and location
 export const checkAvailabilityOfCar = async (req, res) => {
   try {
-    const { location, pickupDate, returnDate } = requestAnimationFrame.body;
+    const { location, pickupDate, returnDate } = req.body;
 
     // fetch all available car for given location
-    const cars = await Car.find({ location, isAvaliable: true });
+    const cars = await Car.find({ location, isAvailable: true });
 
     // check car availability for the given date range using promise
     const availableCarsPromises = cars.map(async (car) => {
@@ -33,8 +34,8 @@ export const checkAvailabilityOfCar = async (req, res) => {
     availableCars = availableCars.filter((car) => car.isAvailable === true);
     res.json({ success: true, availableCars });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error("Error checking car availability:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -42,6 +43,11 @@ export const checkAvailabilityOfCar = async (req, res) => {
 export const createBooking = async (req, res) => {
   try {
     const { _id } = req.user;
+    if (!mongoose.Types.ObjectId.isValid(req.body.car)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Car ID" });
+    }
     const { car, pickupDate, returnDate } = req.body;
 
     const isAvailable = await checkAvailability(car, pickupDate, returnDate);
@@ -68,8 +74,8 @@ export const createBooking = async (req, res) => {
 
     res.json({ success: true, message: "Booking Created" });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error("Error creating booking:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -82,8 +88,8 @@ export const getUserBookings = async (req, res) => {
       .sort({ createdAt: -1 });
     res.json({ success: true, bookings });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error("Error fetching user bookings:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -91,17 +97,19 @@ export const getUserBookings = async (req, res) => {
 export const getOwnerBookings = async (req, res) => {
   try {
     if (req.user.role !== "owner") {
-      return res.json({ success: false, message: "Unauthorized" });
+      return res
+        .status(403)
+        .json({ success: false, message: "Forbidden: Not an owner" });
     }
-    const bookings = (
-      await Booking.find({ owner: req.user._id })
-        .populate("car user")
-        .select("-user.password")
-    ).toSorted({ createdAt: -1 });
+    const bookings = await Booking.find({ owner: req.user._id })
+      .populate("car")
+      .populate("user", "-password") // Exclude password from user
+      .sort({ createdAt: -1 });
+
     res.json({ success: true, bookings });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error("Error fetching owner bookings:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -114,13 +122,17 @@ export const changeBookingStatus = async (req, res) => {
     const booking = await Booking.findById(bookingId);
 
     if (booking.owner.toString() !== _id.toString()) {
-      return res.json({ success: false, message: "Unauthorized" });
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden: You are not the owner of this booking",
+      });
     }
 
     booking.status = status;
     await booking.save();
+    res.json({ success: true, message: `Booking status updated to ${status}` });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error("Error changing booking status:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

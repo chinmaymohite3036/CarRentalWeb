@@ -1,3 +1,4 @@
+// client/src/components/Hero.jsx
 import React, { useState } from "react";
 import { assets, cityList } from "../assets/assets";
 
@@ -5,64 +6,67 @@ const Hero = () => {
   const [pickupLocation, setPickupLocation] = useState("");
 
   return (
-    <div className="h-screen flex flex-col justify-center items-center bg-light text-center gap-14">
-      <h1 className="text-4xl md:text-5xl font-semibold">
+    <div className="flex flex-col justify-center items-center text-center gap-14 px-4 bg-light min-h-screen">
+      <h1 className="text-4xl md:text-5xl font-semibold mt-[-5rem]">
         Luxury Cars on Rent
       </h1>
 
-      <form className="flex flex-col md:flex-row items-start md:items-center justify-between p-6 rounded-lg md:rounded-full w-full max-w-80 md:max-w-200 bg-white shadow-[0px_8px_20px_rgba(0,0,0,0.1)]">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-10 min-md:ml-8">
-          <div className="flex flex-col items-start gap-2">
+      <form className="flex flex-col md:flex-row items-center justify-between p-4 md:p-6 rounded-lg md:rounded-full w-full max-w-4xl bg-white shadow-lg">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10 w-full md:pl-4">
+          {/* Pickup Location */}
+          <div className="flex flex-col items-start gap-1 w-full md:w-auto">
+            <label className="font-medium text-gray-700 text-sm">Pickup Location</label>
             <select
               required
               value={pickupLocation}
               onChange={(e) => setPickupLocation(e.target.value)}
+              className="w-full bg-transparent text-gray-500 outline-none cursor-pointer"
             >
-              <option value="">Pickup Location</option>
+              <option value="">Please Select Location</option>
               {cityList.map((city) => (
                 <option key={city} value={city}>
                   {city}
                 </option>
               ))}
             </select>
-            <p className="px-1 text-sm text-gray-500">
-              {pickupLocation ? pickupLocation : "Please Select Location"}
-            </p>
           </div>
 
-          <div className="flex flex-col items-start gap-2">
-            <label htmlFor="pickup-date">Pick-up Date</label>
+          {/* Pick-up Date */}
+          <div className="flex flex-col items-start gap-1 w-full md:w-auto">
+            <label htmlFor="pickup-date" className="font-medium text-gray-700 text-sm">Pick-up Date</label>
             <input
               type="date"
               id="pickup-date"
               min={new Date().toISOString().split("T")[0]}
-              className="text-sm text-gray-500"
+              className="w-full bg-transparent text-gray-500 outline-none"
               required
             />
           </div>
 
-          <div className="flex flex-col items-start gap-2">
-            <label htmlFor="return-date">Return Date</label>
+          {/* Return Date */}
+          <div className="flex flex-col items-start gap-1 w-full md:w-auto">
+            <label htmlFor="return-date" className="font-medium text-gray-700 text-sm">Return Date</label>
             <input
               type="date"
               id="return-date"
-              className="text-sm text-gray-500"
+              min={new Date().toISOString().split("T")[0]}
+              className="w-full bg-transparent text-gray-500 outline-none"
               required
             />
           </div>
         </div>
 
-        <button className="flex items-center justify-center gap-1 px-9 py-3 max-sm:mt-4 bg-primary hover:primary-dull text-white rounded-full cursor-pointer">
+        <button className="flex items-center justify-center gap-2 px-6 py-3 mt-4 md:mt-0 bg-primary hover:bg-primary-dull text-white rounded-full cursor-pointer w-full md:w-auto transition-colors">
           <img
             src={assets.search_icon}
             alt="search"
-            className="brightness-300"
+            className="w-5 h-5 invert brightness-0"
           />
-          Search
+          <span className="font-medium">Search</span>
         </button>
       </form>
 
-      <img src={assets.main_car} alt="car" className="max-h-74" />
+      <img src={assets.main_car} alt="car" className="max-h-72 w-auto" />
     </div>
   );
 };

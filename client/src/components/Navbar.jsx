@@ -10,7 +10,7 @@ const navLinks = [
 ];
 
 const Navbar = () => {
-  const { setShowLogin, user, logout, axios, setIsOwner } = useAppContext();
+  const { setShowLogin, user, logout, axios, setIsOwner, isOwner } = useAppContext();
 
   const location = useLocation();
   const [open, setOpen] = useState(false);
