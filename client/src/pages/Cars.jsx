@@ -36,7 +36,7 @@ const Cars = () => {
   }
 
   const searchCarAvailablity = async () => {
-    const { data } = await axios.post("/api/bookings/check_availability", {
+    const { data } = await axios.post("/api/bookings/check-availability", {
       location: pickupLocation,
       pickupDate,
       returnDate,

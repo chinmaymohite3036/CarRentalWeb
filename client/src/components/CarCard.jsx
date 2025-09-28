@@ -61,12 +61,12 @@ const CarCard = ({ car }) => {
 
           <div className="flex items-center text-sm text-muted-foreground">
             <img src={assets.car_icon} alt="" className="h-4 mr-2" />
-            <span>{car.transmission} Seats</span>
+            <span>{car.transmission} Transmission</span>
           </div>
 
           <div className="flex items-center text-sm text-muted-foreground">
             <img src={assets.location_icon} alt="" className="h-4 mr-2" />
-            <span>{car.location} Seats</span>
+            <span>{car.location}</span>
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ const Banner = () => {
         </button>
       </div>
 
-      <img src={assets.banner_car_image} alt="car" className="w-full md:w-2/5 object-contain" />
+      <img src={assets.banner_car_image} alt="car" className="w-full md:w-1/3 object-contain" />
     </div>
   );
 };

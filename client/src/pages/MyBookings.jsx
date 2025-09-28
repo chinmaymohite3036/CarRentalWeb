@@ -1,22 +1,34 @@
-// client/src/pages/MyBookings.jsx
 import React, { useEffect, useState } from "react";
-import { assets, dummyMyBookingsData } from "../assets/assets";
-import Title from "../components/Title";
+import { assets } from "../assets/assets";
+import Title from "../components/Title"; 
+import { useAppContext } from "../context/AppContext";
+import { toast } from "react-hot-toast";
 
 const MyBookings = () => {
+
+
+  const { currency, axios, user } = useAppContext();
   const [bookings, setBookings] = useState([]);
-  const currency = import.meta.env.VITE_CURRENCY;
 
   const fetchMyBookings = async () => {
-    setBookings(dummyMyBookingsData);
+    try {
+      const { data } = await axios.get('/api/bookings/user');
+      if (data.success) {
+        setBookings(data.bookings);
+      } else{ 
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
-    fetchMyBookings();
-  }, []);
+    user && fetchMyBookings()
+    }, [user]);
 
   return (
-    <div className="px-6 md:px-16 lg:px-24 xl:px-32 2xl:px-48 my-16 max-w-7xl mx-auto">
+    <div className="px-6 md:px-16 lg:px-24 xl:px-32 my-16 max-w-7xl mx-auto">
       <Title
         title="My Bookings"
         subtitle="View and manage your all car bookings."
@@ -24,7 +36,7 @@ const MyBookings = () => {
       />
 
       <div className="mt-12 space-y-6">
-        {bookings.map((booking, index) => (
+        {bookings.length > 0 ? bookings.map((booking, index) => (
           <div
             key={booking._id}
             className="flex flex-col md:flex-row gap-6 p-6 border border-gray-200 rounded-lg"
@@ -59,7 +71,9 @@ const MyBookings = () => {
                       className={`px-3 py-1 text-xs font-semibold rounded-full capitalize ${
                         booking.status === "confirmed"
                           ? "bg-green-100 text-green-600"
-                          : "bg-red-100 text-red-500"
+                          : booking.status === "pending" 
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-red-100 text-red-600"
                       }`}
                     >
                       {booking.status}
@@ -79,17 +93,6 @@ const MyBookings = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <img
-                      src={assets.location_icon_colored}
-                      alt=""
-                      className="w-4 h-4 mt-1"
-                    />
-                    <div>
-                      <p className="text-gray-500 text-sm">Pick-up Location</p>
-                      <p className="text-sm font-medium">{booking.car.location}</p>
-                    </div>
-                  </div>
                 </div>
               </div>
 
@@ -106,7 +109,9 @@ const MyBookings = () => {
               </div>
             </div>
           </div>
-        ))}
+        )) : (
+            <p className="text-center text-gray-500 col-span-full">You have not booked any cars yet.</p>
+        )}
       </div>
     </div>
   );
