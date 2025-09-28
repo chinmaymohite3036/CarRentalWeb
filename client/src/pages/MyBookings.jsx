@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
-import Title from "../components/Title"; 
+import Title from "../components/Title";
 import { useAppContext } from "../context/AppContext";
 import { toast } from "react-hot-toast";
+import { motion } from "motion/react";
 
 const MyBookings = () => {
-
-
   const { currency, axios, user } = useAppContext();
   const [bookings, setBookings] = useState([]);
 
   const fetchMyBookings = async () => {
     try {
-      const { data } = await axios.get('/api/bookings/user');
+      const { data } = await axios.get("/api/bookings/user");
       if (data.success) {
         setBookings(data.bookings);
-      } else{ 
-        toast.error(data.message)
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error(error.message);
@@ -24,11 +23,16 @@ const MyBookings = () => {
   };
 
   useEffect(() => {
-    user && fetchMyBookings()
-    }, [user]);
+    user && fetchMyBookings();
+  }, [user]);
 
   return (
-    <div className="px-6 md:px-16 lg:px-24 xl:px-32 my-16 max-w-7xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="px-6 md:px-16 lg:px-24 xl:px-32 my-16 max-w-7xl mx-auto"
+    >
       <Title
         title="My Bookings"
         subtitle="View and manage your all car bookings."
@@ -36,84 +40,92 @@ const MyBookings = () => {
       />
 
       <div className="mt-12 space-y-6">
-        {bookings.length > 0 ? bookings.map((booking, index) => (
-          <div
-            key={booking._id}
-            className="flex flex-col md:flex-row gap-6 p-6 border border-gray-200 rounded-lg"
-          >
-            {/* Left Side: Image and Car Details */}
-            <div className="flex-shrink-0">
-              <img
-                src={booking.car.image}
-                alt={`${booking.car.brand} ${booking.car.model}`}
-                className="w-full md:w-48 h-auto md:h-32 rounded-md object-cover"
-              />
-              <div className="mt-4">
-                <h3 className="text-lg font-medium">
-                  {booking.car.brand} {booking.car.model}
-                </h3>
-                <p className="text-sm text-gray-500">
-                  {booking.car.year} • {booking.car.category} • {booking.car.location}
-                </p>
-              </div>
-            </div>
-
-            {/* Right Side: Booking Information */}
-            <div className="flex-grow flex flex-col md:flex-row justify-between w-full">
-              {/* Middle Section */}
-              <div className="flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <p className="px-3 py-1.5 bg-light rounded text-gray-600">
-                      Booking #{index + 1}
-                    </p>
-                    <p
-                      className={`px-3 py-1 text-xs font-semibold rounded-full capitalize ${
-                        booking.status === "confirmed"
-                          ? "bg-green-100 text-green-600"
-                          : booking.status === "pending" 
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-red-600"
-                      }`}
-                    >
-                      {booking.status}
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-3 mb-4">
-                    <img
-                      src={assets.calendar_icon_colored}
-                      alt=""
-                      className="w-4 h-4 mt-1"
-                    />
-                    <div>
-                      <p className="text-gray-500 text-sm">Rental Period</p>
-                      <p className="text-sm font-medium">
-                        {new Date(booking.pickupDate).toLocaleDateString()} to{" "}
-                        {new Date(booking.returnDate).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
+        {bookings.length > 0 ? (
+          bookings.map((booking, index) => (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.4 }}
+              key={booking._id}
+              className="flex flex-col md:flex-row gap-6 p-6 border border-gray-200 rounded-lg"
+            >
+              {/* Left Side: Image and Car Details */}
+              <div className="flex-shrink-0">
+                <img
+                  src={booking.car.image}
+                  alt={`${booking.car.brand} ${booking.car.model}`}
+                  className="w-full md:w-48 h-auto md:h-32 rounded-md object-cover"
+                />
+                <div className="mt-4">
+                  <h3 className="text-lg font-medium">
+                    {booking.car.brand} {booking.car.model}
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    {booking.car.year} • {booking.car.category} •{" "}
+                    {booking.car.location}
+                  </p>
                 </div>
               </div>
 
-              {/* Far Right Section */}
-              <div className="text-left md:text-right mt-6 md:mt-0">
-                <p className="text-gray-500 text-sm mb-2">Total Price</p>
-                <h1 className="text-2xl font-semibold text-primary mb-2">
-                  {currency}
-                  {booking.price.toLocaleString()}
-                </h1>
-                <p className="text-gray-500 text-sm">
-                  Booked on {new Date(booking.createdAt).toLocaleDateString()}
-                </p>
+              {/* Right Side: Booking Information */}
+              <div className="flex-grow flex flex-col md:flex-row justify-between w-full">
+                {/* Middle Section */}
+                <div className="flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <p className="px-3 py-1.5 bg-light rounded text-gray-600">
+                        Booking #{index + 1}
+                      </p>
+                      <p
+                        className={`px-3 py-1 text-xs font-semibold rounded-full capitalize ${
+                          booking.status === "confirmed"
+                            ? "bg-green-100 text-green-600"
+                            : booking.status === "pending"
+                            ? "bg-yellow-100 text-yellow-700"
+                            : "bg-red-100 text-red-600"
+                        }`}
+                      >
+                        {booking.status}
+                      </p>
+                    </div>
+                    <div className="flex items-start gap-3 mb-4">
+                      <img
+                        src={assets.calendar_icon_colored}
+                        alt=""
+                        className="w-4 h-4 mt-1"
+                      />
+                      <div>
+                        <p className="text-gray-500 text-sm">Rental Period</p>
+                        <p className="text-sm font-medium">
+                          {new Date(booking.pickupDate).toLocaleDateString()} to{" "}
+                          {new Date(booking.returnDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Far Right Section */}
+                <div className="text-left md:text-right mt-6 md:mt-0">
+                  <p className="text-gray-500 text-sm mb-2">Total Price</p>
+                  <h1 className="text-2xl font-semibold text-primary mb-2">
+                    {currency}
+                    {booking.price.toLocaleString()}
+                  </h1>
+                  <p className="text-gray-500 text-sm">
+                    Booked on {new Date(booking.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
-            </div>
-          </div>
-        )) : (
-            <p className="text-center text-gray-500 col-span-full">You have not booked any cars yet.</p>
+            </motion.div>
+          ))
+        ) : (
+          <p className="text-center text-gray-500 col-span-full">
+            You have not booked any cars yet.
+          </p>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
