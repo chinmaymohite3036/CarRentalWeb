@@ -1,86 +1,97 @@
-import React from "react";
+// client/src/components/Login.jsx
+import React, { useState } from "react";
+import { useAppContext } from "../context/AppContext";
 
-const Login = ({ setShowLogin }) => {
-  const [state, setState] = React.useState("login");
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+const Login = () => {
+  const { setShowLogin, registerUser, loginUser } = useAppContext();
+  const [state, setState] = useState("Login");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    if (state === "Sign Up") {
+      await registerUser(name, email, password);
+    } else {
+      await loginUser(email, password);
+    }
   };
+
   return (
     <div
       onClick={() => setShowLogin(false)}
-      className="fixed top-0 bottom-0 left-0 right-0 z-100 flex items-center text-sm text-gray-600 bg-black/50"
+      className="fixed top-0 bottom-0 left-0 right-0 z-50 flex items-center justify-center text-sm text-gray-600 bg-black/50"
     >
       <form
         onSubmit={onSubmitHandler}
         onClick={(e) => e.stopPropagation()}
-        className="flex flex-col gap-4 m-auto items-start p-8 py-12 w-80 sm:w-[352px] text-gray-500 rounded-lg shadow-xl border border-gray-200 bg-white"
+        className="flex flex-col gap-4 m-auto items-start p-8 py-10 w-80 sm:w-[360px] text-gray-600 rounded-lg shadow-xl border border-gray-200 bg-white"
       >
-        <p className="text-2xl font-medium m-auto">
-          <span className="text-primary">User</span>{" "}
-          {state === "login" ? "Login" : "Sign Up"}
+        <p className="text-2xl font-semibold m-auto text-gray-800">
+          {state}
         </p>
-        {state === "register" && (
+        {state === "Sign Up" && (
           <div className="w-full">
-            <p>Name</p>
+            <p className="font-medium">Name</p>
             <input
               onChange={(e) => setName(e.target.value)}
               value={name}
-              placeholder="Name"
-              className="border border-gray-200 rounded w-full p-2 mt-1 outline-primary"
+              placeholder="Your Name"
+              className="border border-gray-300 rounded w-full p-2.5 mt-1 outline-primary"
               type="text"
               required
             />
           </div>
         )}
-        <div className="w-full ">
-          <p>Email</p>
+        <div className="w-full">
+          <p className="font-medium">Email</p>
           <input
             onChange={(e) => setEmail(e.target.value)}
             value={email}
-            placeholder="xyz@gmail.com"
-            className="border border-gray-200 rounded w-full p-2 mt-1 outline-primary"
+            placeholder="your.email@example.com"
+            className="border border-gray-300 rounded w-full p-2.5 mt-1 outline-primary"
             type="email"
             required
           />
         </div>
-        <div className="w-full ">
-          <p>Password</p>
+        <div className="w-full">
+          <p className="font-medium">Password</p>
           <input
             onChange={(e) => setPassword(e.target.value)}
             value={password}
-            placeholder="Password"
-            className="border border-gray-200 rounded w-full p-2 mt-1 outline-primary"
+            placeholder="********"
+            className="border border-gray-300 rounded w-full p-2.5 mt-1 outline-primary"
             type="password"
             required
           />
         </div>
-        {state === "register" ? (
+
+        <button className="bg-primary hover:bg-primary-dull transition-colors text-white w-full py-2.5 rounded-md cursor-pointer font-semibold mt-2">
+          {state === "Sign Up" ? "Create Account" : "Login"}
+        </button>
+        
+        {state === "Login" ? (
           <p>
-            Already have account?{" "}
+            Don't have an account?{" "}
             <span
-              onClick={() => setState("login")}
-              className="text-primary cursor-pointer"
+              onClick={() => setState("Sign Up")}
+              className="text-primary cursor-pointer font-semibold"
             >
-              click here
+              Sign up here
             </span>
           </p>
         ) : (
           <p>
-            Create an account?{" "}
+            Already have an account?{" "}
             <span
-              onClick={() => setState("register")}
-              className="text-primary cursor-pointer"
+              onClick={() => setState("Login")}
+              className="text-primary cursor-pointer font-semibold"
             >
-              click here
+              Login here
             </span>
           </p>
         )}
-        <button className="bg-primary hover:bg-blue-800 transition-all text-white w-full py-2 rounded-md cursor-pointer">
-          {state === "register" ? "Create Account" : "Login"}
-        </button>
       </form>
     </div>
   );
