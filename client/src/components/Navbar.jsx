@@ -1,7 +1,9 @@
+// client/src/components/Navbar.jsx
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
+import { toast } from "react-hot-toast";
 
 const navLinks = [
   { name: "Home", path: "/" },
@@ -10,25 +12,12 @@ const navLinks = [
 ];
 
 const Navbar = () => {
-  const { setShowLogin, user, logout, axios, setIsOwner, isOwner } = useAppContext();
+  // Correctly get all required functions and state from the context
+  const { showLogin, setShowLogin, user, logout, isOwner, changeRole } = useAppContext();
 
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-
-  const changeRole = async () => {
-    try {
-      const { data } = await axios.post("/api/owner/change-role");
-      if (data.success) {
-        setIsOwner(true);
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
 
   return (
     <div
@@ -37,7 +26,7 @@ const Navbar = () => {
       }`}
     >
       <Link to="/">
-        <img src={assets.logo} alt="logo" className="h-10 md:h-13" />
+        <img src={assets.logo} alt="logo" className="h-10 md:h-12" />
       </Link>
       <div
         className={`max-sm:fixed max-sm:h-screen max-sm:w-full max-sm:top-16 max-sm:border-t border-border-color right-0 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 max-sm:p-4 transition-all duration-300 z-50 ${
@@ -61,7 +50,16 @@ const Navbar = () => {
 
         <div className="flex max-sm:flex-col items-start sm:items-center gap-6">
           <button
-            onClick={() => (isOwner ? navigate("/owner") : changeRole())}
+            onClick={() => {
+              if (!user) {
+                toast.error("You must be logged in to list a car");
+                setShowLogin(true);
+              } else if (isOwner) {
+                navigate("/owner");
+              } else {
+                changeRole(); // This now calls the correct function from the context
+              }
+            }}
             className="cursor-pointer"
           >
             {isOwner ? "Dashboard" : "List Cars"}

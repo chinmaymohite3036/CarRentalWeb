@@ -1,52 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { assets, dummyDashboardData } from "../../assets/assets";
+// client/src/pages/owner/Dashboard.jsx
+import React, { useEffect } from "react";
+import { assets } from "../../assets/assets";
 import Title from "../../components/owner/Title";
+import { useAppContext } from "../../context/AppContext";
 
 const Dashboard = () => {
   const currency = import.meta.env.VITE_CURRENCY;
-  const [data, setData] = useState({
-    totalCars: 0,
-    totalBookings: 0,
-    pendingBookings: 0,
-    completedBookings: 0,
-    recentBookings: [],
-    monthlyRevenue: 0,
-  });
-
-  const dashboardCards = [
-    { title: "Total Cars", value: data.totalCars, icon: assets.carIconColored },
-    {
-      title: "Total Bookings",
-      value: data.totalBookings,
-      icon: assets.listIconColored,
-    },
-    {
-      title: "Pending",
-      value: data.pendingBookings,
-      icon: assets.cautionIconColored,
-    },
-    {
-      title: "Confirmed",
-      value: data.completedBookings,
-      icon: assets.listIconColored,
-    },
-  ];
+  const { dashboardData, fetchDashboardData } = useAppContext();
 
   useEffect(() => {
-    setData(dummyDashboardData);
+    fetchDashboardData();
   }, []);
+
+  const dashboardCards = [
+    { title: "Total Cars", value: dashboardData?.totalCars || 0, icon: assets.carIconColored },
+    { title: "Total Bookings", value: dashboardData?.totalBookings || 0, icon: assets.listIconColored },
+    { title: "Pending", value: dashboardData?.pendingBookings || 0, icon: assets.cautionIconColored },
+    { title: "Confirmed", value: dashboardData?.completedBookings || 0, icon: assets.listIconColored },
+  ];
+
   return (
     <div className="px-4 pt-10 md:px-10 flex-1">
       <Title
         title="Admin Dashboard"
-        subtitle="Moniter overall platform performance including total cars, bookings, revenue and recent activities."
+        subtitle="Monitor overall platform performance including total cars, bookings, revenue and recent activities."
       />
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-8 max-w-3xl">
         {dashboardCards.map((card, index) => (
           <div
             key={index}
-            className="flex gap-2 items-center justify-between p-4 rounded-md border border-borderColor"
+            className="flex gap-2 items-center justify-between p-4 rounded-md border border-border-color"
           >
             <div>
               <h1 className="text-xs text-gray-500">{card.title}</h1>
@@ -60,11 +44,10 @@ const Dashboard = () => {
       </div>
 
       <div className="flex flex-wrap items-start gap-6 mb-8 w-full">
-        {/* recent bookings */}
         <div className="p-4 md:p-6 border border-borderColor rounded-md max-w-lg w-full">
           <h1 className="text-lg font-medium">Recent Bookings</h1>
           <p className="text-gray-500">Latest customer bookings</p>
-          {data.recentBookings.map((booking, index) => (
+          {dashboardData.recentBookings && dashboardData.recentBookings.map((booking, index) => (
             <div key={index} className="mt-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-primary/10">
@@ -79,7 +62,7 @@ const Dashboard = () => {
                     {booking.car.brand} {booking.car.model}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {booking.createdAt.split("T")[0]}
+                    {new Date(booking.createdAt).toLocaleDateString()}
                   </p>
                 </div>
               </div>
@@ -97,13 +80,12 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* monthly revenue */}
         <div className="p-4 md:p-6 mb-6 border border-borderColor rounded-md w-full md:max-w-xs">
-          <h1 className="text-lg font-medium">Montly Revenue</h1>
+          <h1 className="text-lg font-medium">Monthly Revenue</h1>
           <p className="text-gray-500">Revenue for current month</p>
           <p className="text-3xl mt-6 font-semibold text-primary">
             {currency}
-            {data.monthlyRevenue}
+            {dashboardData.monthlyRevenue || 0}
           </p>
         </div>
       </div>
